@@ -1,0 +1,262 @@
+[
+    {
+        "id": 1,
+        "name": "Chicken Pizza",
+        "price": 12.99,
+        "short_details": "Delicious pizza topped with chicken, cheese, and tomato sauce.",
+        "long_details": "Chicken Pizza is a classic pizza topped with tender pieces of chicken, melted cheese, and flavorful tomato sauce. The combination of savory chicken and gooey cheese on a crispy crust makes it a favorite among pizza lovers. Whether enjoyed as a quick meal or shared with friends during a gathering, Chicken Pizza never disappoints.",
+        "rating": 4.5,
+        "origin": "Italy",
+        "image": "../public/Food/image1.jpeg"
+    },
+    {
+        "id": 2,
+        "name": "Chicken Tikka Masala",
+        "price": 14.99,
+        "short_details": "A classic Indian dish featuring grilled chicken in a creamy tomato sauce.",
+        "long_details": "Chicken Tikka Masala is a popular Indian dish known for its rich and creamy tomato-based sauce and tender pieces of grilled chicken. The sauce is made with a blend of aromatic spices, including cumin, coriander, and garam masala, which gives it a deliciously complex flavor profile. Served with rice or naan bread, Chicken Tikka Masala is a comforting and satisfying meal that's sure to please.",
+        "rating": 4.8,
+        "origin": "India",
+        "image": "../public/Food/image2.jpeg"
+    },
+    {
+        "id": 3,
+        "name": "Beef Stroganoff",
+        "price": 16.99,
+        "short_details": "Tender beef strips cooked in a rich sour cream sauce served over noodles.",
+        "long_details": "Beef Stroganoff is a classic Russian dish made with tender strips of beef cooked in a rich and creamy sour cream sauce. The sauce is flavored with onions, garlic, and a touch of mustard, giving it a tangy and savory taste. Served over a bed of buttery egg noodles, Beef Stroganoff is a hearty and comforting meal that's perfect for cold winter nights.",
+        "rating": 4.3,
+        "origin": "Russia",
+        "image": "../public/Food/image3.jpeg"
+    },
+    {
+        "id": 4,
+        "name": "Margherita Pizza",
+        "price": 11.99,
+        "short_details": "Classic Italian pizza topped with fresh tomatoes, mozzarella, and basil.",
+        "long_details": "Margherita Pizza is a classic Italian pizza known for its simple yet delicious combination of fresh tomatoes, mozzarella cheese, and basil leaves. Named after Queen Margherita of Italy, this pizza features the colors of the Italian flag – red, white, and green. The ripe tomatoes, creamy mozzarella, and fragrant basil come together to create a burst of flavor in every bite.",
+        "rating": 4.7,
+        "origin": "Italy",
+        "image": "../public/Food/image4.jpeg"
+    },
+    {
+        "id": 5,
+        "name": "Sushi Rolls",
+        "price": 18.99,
+        "short_details": "Japanese rice rolls filled with a variety of ingredients like fish, avocado, and cucumber.",
+        "long_details": "Sushi Rolls, also known as makizushi, are a popular Japanese dish consisting of rice and various fillings wrapped in seaweed. Common fillings include raw fish, avocado, cucumber, and crab meat. Served with soy sauce, wasabi, and pickled ginger, Sushi Rolls are not only delicious but also visually appealing. Whether enjoyed as a snack or a meal, Sushi Rolls are a staple of Japanese cuisine.",
+        "rating": 4.6,
+        "origin": "Japan",
+        "image": "../public/Food/image5.jpeg"
+    },
+    {
+        "id": 6,
+        "name": "Caesar Salad",
+        "price": 8.99,
+        "short_details": "A classic salad made with romaine lettuce, croutons, Parmesan cheese, and Caesar dressing.",
+        "long_details": "Caesar Salad is a classic salad made with crisp romaine lettuce, crunchy croutons, and tangy Parmesan cheese tossed in a creamy Caesar dressing. The salad is named after its creator, Caesar Cardini, an Italian-American restaurateur. With its combination of textures and flavors, Caesar Salad is a refreshing and satisfying dish that's perfect as a starter or a light meal.",
+        "rating": 4.2,
+        "origin": "Mexico",
+        "image": "../public/Food/image6.jpeg"
+    },
+    {
+        "id": 7,
+        "name": "Thai Soup",
+        "price": 9.99,
+        "short_details": "A flavorful Thai soup with coconut milk, lemongrass, and spices.",
+        "long_details": "Thai Soup is a fragrant and flavorful soup made with coconut milk, lemongrass, galangal, and Thai spices. Commonly known as Tom Kha Gai, this soup features tender chicken pieces, mushrooms, and a variety of herbs and spices. With its creamy texture and bold flavors, Thai Soup is a comforting and satisfying dish that's sure to warm you up on a cold day.",
+        "rating": 4.4,
+        "origin": "Thailand",
+        "image": "../public/Food/image7.jpeg"
+    },
+    {
+        "id": 8,
+        "name": "Cheese Burger",
+        "price": 10.99,
+        "short_details": "A juicy beef patty topped with cheese, lettuce, tomato, and onion on a bun.",
+        "long_details": "Cheese Burger is a classic American sandwich made with a juicy beef patty topped with melted cheese, lettuce, tomato, and onion, served on a soft bun. Whether grilled, fried, or broiled, the beef patty is the star of the show, providing a savory and satisfying flavor. With its combination of textures and flavors, Cheese Burger is a beloved comfort food enjoyed by people of all ages.",
+        "rating": 4.5,
+        "origin": "United States",
+        "image": "../public/Food/image8.jpeg"
+    },
+    {
+        "id": 9,
+        "name": "Butter Chicken",
+        "price": 15.99,
+        "short_details": "A creamy and mildly spiced Indian chicken dish cooked with butter and tomato sauce.",
+        "long_details": "Butter Chicken, also known as Murgh Makhani, is a popular Indian dish made with tender chicken pieces cooked in a rich and creamy tomato-based sauce. The sauce is flavored with butter, cream, and a blend of aromatic spices, giving it a mild yet flavorful taste. Served with rice or naan bread, Butter Chicken is a comforting and satisfying meal that's sure to please.",
+        "rating": 4.7,
+        "origin": "India",
+        "image": "../public/Food/image9.jpeg"
+    },
+    {
+        "id": 10,
+        "name": "Fish and Chips",
+        "price": 13.99,
+        "short_details": "Deep-fried fish fillets served with crispy potato chips.",
+        "long_details": "Fish and Chips is a classic British dish consisting of battered and deep-fried fish fillets served with thick-cut potato chips. Common types of fish used include cod, haddock, and pollock, while the chips are typically made from floury potatoes like Maris Piper. Served with tartar sauce and malt vinegar, Fish and Chips is a beloved comfort food enjoyed throughout the United Kingdom.",
+        "rating": 4.6,
+        "origin": "United Kingdom",
+        "image": "../public/Food/image10.jpeg"
+    },
+    {
+        "id": 11,
+        "name": "French Fry",
+        "price": 5.99,
+        "short_details": "Crispy fried potato sticks seasoned with salt.",
+        "long_details": "French Fry, also known as pommes frites, are crispy fried potato sticks seasoned with salt. Originating in Belgium, French Fries are a popular side dish or snack enjoyed worldwide. They are typically served hot and crispy, with a soft interior. Whether enjoyed on their own or paired with a dipping sauce, French Fries are a delicious and satisfying treat.",
+        "rating": 4.3,
+        "origin": "Belgium",
+        "image": "../public/Food/image11.jpeg"
+    },
+    {
+        "id": 12,
+        "name": "Falafel Wrap",
+        "price": 9.99,
+        "short_details": "A Middle Eastern wrap filled with falafel balls, lettuce, tomato, and tahini sauce.",
+        "long_details": "Falafel Wrap is a popular Middle Eastern street food made with crispy falafel balls wrapped in pita bread along with lettuce, tomato, cucumber, and a generous drizzle of tahini sauce. Falafel, made from ground chickpeas or fava beans, is deep-fried until golden brown and crispy, resulting in a flavorful and satisfying vegetarian dish.",
+        "rating": 4.4,
+        "origin": "Middle East",
+        "image": "../public/Food/image12.jpeg"
+    },
+    {
+        "id": 13,
+        "name": "Lasagna",
+        "price": 16.99,
+        "short_details": "Layers of pasta sheets, meat sauce, and cheese baked to perfection.",
+        "long_details": "Lasagna is a classic Italian pasta dish consisting of layers of pasta sheets, rich meat sauce, and creamy cheese, baked to perfection. The dish is typically made with alternating layers of pasta, meat sauce, and cheese, with the top layer often topped with a generous amount of melted cheese. Served hot and bubbling from the oven, Lasagna is a hearty and satisfying meal that's perfect for sharing with family and friends.",
+        "rating": 4.7,
+        "origin": "Italy",
+        "image": "../public/Food/image13.jpeg"
+    },
+    {
+        "id": 14,
+        "name": "Shrimp Scampi",
+        "price": 19.99,
+        "short_details": "Shrimp cooked in a garlic butter sauce served over pasta.",
+        "long_details": "Shrimp Scampi is a classic Italian-American dish featuring tender shrimp cooked in a garlic butter sauce, served over pasta. The dish is simple yet elegant, with the garlic butter sauce infusing the shrimp with rich flavor. Served with a sprinkle of parsley and a squeeze of lemon juice, Shrimp Scampi is a delicious and satisfying meal that's perfect for any occasion.",
+        "rating": 4.6,
+        "origin": "Italy",
+        "image": "../public/Food/image14.jpeg"
+    },
+    {
+        "id": 15,
+        "name": "Beef Bulgogi",
+        "price": 17.99,
+        "short_details": "Korean grilled beef marinated in a sweet and savory sauce.",
+        "long_details": "Beef Bulgogi is a popular Korean dish made with thinly sliced beef marinated in a sweet and savory sauce, then grilled to perfection. The marinade typically consists of soy sauce, sugar, garlic, and sesame oil, giving the beef its signature flavor. Served with rice and a variety of side dishes, Beef Bulgogi is a delicious and satisfying meal that's sure to please.",
+        "rating": 4.8,
+        "origin": "Korea",
+        "image": "../public/Food/image15.jpeg"
+    },
+    {
+        "id": 16,
+        "name": "Chicken Parmesan",
+        "price": 14.99,
+        "short_details": "Breaded chicken breast topped with marinara sauce and melted cheese.",
+        "long_details": "Chicken Parmesan, also known as Chicken Parmigiana, is a classic Italian-American dish consisting of breaded chicken breast topped with marinara sauce and melted cheese, then baked until bubbly and golden brown. The dish is typically served with a side of pasta and marinara sauce, making it a hearty and satisfying meal that's perfect for any occasion.",
+        "rating": 4.5,
+        "origin": "Italy",
+        "image": "../public/Food/image16.jpeg"
+    },
+    {
+        "id": 17,
+        "name": "Veggie Stir-Fry",
+        "price": 12.99,
+        "short_details": "Assorted vegetables stir-fried in a flavorful sauce.",
+        "long_details": "Veggie Stir-Fry is a colorful and nutritious dish made with a variety of fresh vegetables, stir-fried in a flavorful sauce. Common vegetables used include bell peppers, broccoli, carrots, and snap peas, but you can use any vegetables you like. Served over rice or noodles, Veggie Stir-Fry is a quick and easy meal that's perfect for busy weeknights.",
+        "rating": 4.4,
+        "origin": "China",
+        "image": "../public/Food/image17.jpeg"
+    },
+    {
+        "id": 18,
+        "name": "Eggs Benedict",
+        "price": 11.99,
+        "short_details": "Poached eggs served on English muffins with ham and hollandaise sauce.",
+        "long_details": "Eggs Benedict is a classic brunch dish consisting of poached eggs served on toasted English muffins, topped with ham or bacon and hollandaise sauce. The dish is often garnished with chopped chives or parsley for added flavor and presentation. Served with a side of hash browns or roasted potatoes, Eggs Benedict is a decadent and delicious meal that's perfect for special occasions.",
+        "rating": 4.6,
+        "origin": "United States",
+        "image": "../public/Food/image18.jpeg"
+    },
+    {
+        "id": 19,
+        "name": "Burrito Bowl",
+        "price": 11.99,
+        "short_details": "A Mexican-inspired bowl with rice, beans, meat, salsa, and toppings.",
+        "long_details": "Burrito Bowl is a Mexican-inspired dish consisting of a bowl filled with rice, beans, meat, salsa, and a variety of toppings. Common proteins used include grilled chicken, steak, or pork, while toppings may include lettuce, tomato, avocado, cheese, and sour cream. Served with a side of tortilla chips or cornbread, Burrito Bowl is a flavorful and satisfying meal that's perfect for lunch or dinner.",
+        "rating": 4.5,
+        "origin": "Mexico",
+        "image": "../public/Food/image19.jpeg"
+    },
+    {
+        "id": 20,
+        "name": "Chocolate Fondue",
+        "price": 9.99,
+        "short_details": "Melted chocolate served with fruits, marshmallows, and other dippables.",
+        "long_details": "Chocolate Fondue is a fun and interactive dessert consisting of melted chocolate served in a fondue pot, accompanied by a variety of dippable treats such as fruits, marshmallows, and pound cake. The warm melted chocolate is perfect for dipping, creating a sweet and indulgent treat that's perfect for sharing with friends and family.",
+        "rating": 4.3,
+        "origin": "Switzerland",
+        "image": "../public/Food/image20.jpeg"
+    },
+    {
+        "id": 21,
+        "name": "Mutton Biryani",
+        "price": 15.99,
+        "short_details": "A flavorful Indian rice dish cooked with marinated mutton and spices.",
+        "long_details": "Mutton Biryani is a fragrant and flavorful Indian rice dish made with marinated mutton pieces cooked with aromatic spices and basmati rice. The dish is typically prepared by layering cooked rice with the marinated mutton and then slow-cooking it to allow the flavors to meld together. Served with raita or yogurt sauce, Mutton Biryani is a hearty and satisfying meal that's perfect for special occasions.",
+        "rating": 4.7,
+        "origin": "India",
+        "image": "../public/Food/image21.jpeg"
+    },
+    {
+        "id": 22,
+        "name": "Lobster Bisque",
+        "price": 22.99,
+        "short_details": "A creamy soup made with lobster meat, cream, and other seasonings.",
+        "long_details": "Lobster Bisque is a luxurious and creamy soup made with lobster meat, cream, and a variety of seasonings. The soup is typically flavored with aromatics like onions, garlic, and thyme, and finished with a splash of brandy or sherry for added depth of flavor. Served hot with a sprinkle of fresh herbs, Lobster Bisque is a decadent and elegant starter that's perfect for special occasions.",
+        "rating": 4.8,
+        "origin": "France",
+        "image": "../public/Food/image22.jpeg"
+    },
+    {
+        "id": 23,
+        "name": "Beef Shawarma",
+        "price": 13.99,
+        "short_details": "Middle Eastern street food made with grilled marinated beef, wrapped in pita bread.",
+        "long_details": "Beef Shawarma is a popular Middle Eastern street food made with thinly sliced marinated beef, grilled to perfection and wrapped in warm pita bread along with a variety of toppings such as lettuce, tomatoes, onions, and tahini sauce. The marinated beef is typically seasoned with a blend of aromatic spices, giving it a rich and flavorful taste. Served hot and fresh, Beef Shawarma is a delicious and satisfying meal that's perfect for lunch or dinner.",
+        "rating": 4.5,
+        "origin": "Middle East",
+        "image": "../public/Food/image23.jpeg"
+    },
+    {
+        "id": 24,
+        "name": "Beef Wellington",
+        "price": 25.99,
+        "short_details": "Tender beef fillet wrapped in puff pastry and baked to perfection.",
+        "long_details": "Beef Wellington is a classic British dish consisting of tender beef fillet coated with pâté and duxelles, then wrapped in puff pastry and baked until golden brown and crispy. The dish is named after the Duke of Wellington and is often served with a rich mushroom sauce or demi-glace. With its combination of savory beef, flaky pastry, and flavorful sauce, Beef Wellington is a show-stopping centerpiece for any special occasion.",
+        "rating": 4.9,
+        "origin": "United Kingdom",
+        "image": "../public/Food/image24.jpeg"
+    },
+    {
+        "id": 25,
+        "name": "Chicken Shawarma",
+        "price": 12.99,
+        "short_details": "Grilled marinated chicken served in a wrap or pita bread with tahini sauce.",
+        "long_details": "Chicken Shawarma is a popular Middle Eastern street food made with thinly sliced marinated chicken, grilled to perfection and wrapped in warm pita bread or served on a plate with a variety of toppings such as lettuce, tomatoes, onions, and tahini sauce. The marinated chicken is typically seasoned with a blend of aromatic spices, giving it a rich and flavorful taste. Served hot and fresh, Chicken Shawarma is a delicious and satisfying meal that's perfect for lunch or dinner.",
+        "rating": 4.6,
+        "origin": "Middle East",
+        "image": "../public/Food/image25.jpeg"
+    },
+    {
+        "id": 26,
+        "name": "Beef Tacos",
+        "price": 10.99,
+        "short_details": "Soft or crispy tortillas filled with seasoned beef, lettuce, cheese, and salsa.",
+        "long_details": "Beef Tacos are a popular Mexican dish consisting of soft or crispy tortillas filled with seasoned ground beef, lettuce, cheese, and salsa. The beef is typically seasoned with a blend of spices such as cumin, chili powder, and paprika, giving it a bold and flavorful taste. Served with a squeeze of lime and a dollop of sour cream, Beef Tacos are a delicious and satisfying meal that's perfect for any occasion.",
+        "rating": 4.4,
+        "origin": "Mexico",
+        "image": "../public/Food/image26.jpeg"
+    }
+]
