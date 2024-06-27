@@ -3,7 +3,7 @@ const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
-const item = require('./items.json');
+const items = require('./items.json');
 
 //middleware
 //mongodb restaurant (rifat913766) ||rifat...
@@ -14,9 +14,21 @@ app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
 })
 
-app.get('/item', (req, res) => {
-  res.send(item);
+app.get('/items', (req, res) => {
+  res.send(items);
 })
+
+app.get('/items/:id', (req, res) => {
+  const itemId = parseInt(req.params.id);
+  const item = items.find(item => item.id === itemId);
+
+  if (!item) {
+    return res.status(404).json({ error: 'Item not found' });
+  }
+  setTimeout(() => {
+    res.json(item);
+  }, 1000);
+});
 
 const uri = "mongodb+srv://restaurant:rifat913766@cluster0.20dr11o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -31,33 +43,56 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const database = client.db("userDB");
-    const userCollection = database.collection("user");
-    // const userCollection = client.db
-//Registration Data Store
-    app.post('/user',async (req, res)=>{
-      const user = req.body;
-      console.log(user);
-      const result =  await userCollection.insertOne(user);
+    // const database = client.db("restaurantDB");
+    const userCollection = client.db("restaurantDB").collection("user");
+    const reviewCollection = client.db("restaurantDB").collection("review");
+    const cartCollection = client.db("restaurantDB").collection("cart");
+
+    //Registration User Data Store
+    app.post('/user', async (req, res) => {
+      const userData = req.body;
+      // console.log(user);
+      const result = await userCollection.insertOne(userData);
+      res.send(result);
+    })
+    app.get('/user', async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    })
+    app.put('user/:id', async (req, res) => {
+      const id = req.params.id;
+      const updateUser = req.body;
+      console.log(updateUser);
+    })
+
+    //Review Data
+    app.get('/review', async (req, res) => {
+      const result = await reviewCollection.find().toArray();
       res.send(result);
     })
 
-    app.get('/user', async(req, res) => {
-      const getUser = userCollection.find();
-      const result = await getUser.toArray();
+    //Cart Data
+    app.post('/cart', async(req, res)=>{
+      const cartData= req.body;
+      console.log(cartData );
+      const result = await cartCollection.insertOne(cartData);
+      res.send(result);
+    })
+    app.get('/cart', async(req, res)=>{
+      const result = await cartCollection.find().toArray();
       res.send(result);
     })
 
+   
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    // await client.close(); also check successfully connected 
+    // await client.close();
   }
 }
 run().catch(console.dir);
