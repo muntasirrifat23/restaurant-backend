@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 const items = require('./items.json');
@@ -56,22 +56,22 @@ async function run() {
       // console.log(user);
       const result = await userCollection.insertOne(userData);
       res.send(result);
-    })
+    });
     app.get('/user', async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
-    })
+    });
     app.put('user/:id', async (req, res) => {
       const id = req.params.id;
       const updateUser = req.body;
       console.log(updateUser);
-    })
+    });
 
     //Review Data
     app.get('/review', async (req, res) => {
       const result = await reviewCollection.find().toArray();
       res.send(result);
-    })
+    });
 
     //Cart Data
     app.post('/cart', async(req, res)=>{
@@ -79,13 +79,23 @@ async function run() {
       console.log(cartData );
       const result = await cartCollection.insertOne(cartData);
       res.send(result);
-    })
+    });
     app.get('/cart', async(req, res)=>{
-      const result = await cartCollection.find().toArray();
+      const userEmail = req.query.email;
+      const result = await cartCollection.find({email:userEmail}).toArray();
       res.send(result);
-    })
+    });
 
-   
+    app.delete('/cart/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
+        if (result.deletedCount === 1) {
+          res.status(200).json({ message: 'Item deleted successfully' });
+        } 
+    });
+      
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
