@@ -1,9 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
+const SSLCommerzPayment = require('sslcommerz-lts')
+
 const app = express();
+require('dotenv').config();
 const port = process.env.PORT || 5000;
 const items = require('./items.json');
+
+// const stripe = require('stripe')("pk_test_51PYQnu2MI2zfqDyLp5ilg5jdGc1lnyegjoR9HoipdwlvHcO1aMg5XQeBWHLmJtKCPKTGrxjCCklmSu6HrDrpOhOc006OoEe1fm")
 
 //middleware
 //mongodb restaurant (rifat913766) ||rifat...
@@ -31,6 +37,11 @@ app.get('/items/:id', (req, res) => {
 });
 
 const uri = "mongodb+srv://restaurant:rifat913766@cluster0.20dr11o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+//SSL
+const store_id = process.env.SSL_STORE_ID;
+const store_passwd = process.env.SSL_STORE_PASS;
+const is_live = false;
+
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -40,6 +51,8 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+
 
 async function run() {
   try {
@@ -94,14 +107,77 @@ async function run() {
           res.status(200).json({ message: 'Item deleted successfully' });
         } 
     });
-      
 
+    //Payment  
+
+    // STRIPE
+    // app.post('/payment', async(req, res)=>{
+    //   const {price} = req.body;
+    //   const amount = parseInt(price*100);
+    //   const paymentIntent = await stripe.paymentIntents.create({
+    //     amount: amount,
+    //     currency:'usd',
+    //     payment_methods_type:['card']
+    //   })
+    //   res.send({
+    //     clientSecrect : paymentIntent.client_secret,
+    //   })
+    // })
+
+
+    app.post('/payment', async (req, res) => {
+      const { totalAmount, productId } = req.body;
+      console.log(`Received payment request for total amount: ${totalAmount} and product ID: ${productId}`);
+
+      const data = {
+        store_id: store_id,
+        store_passwd: store_passwd,
+        total_amount: totalAmount,
+        currency: 'BDT',
+        tran_id: 'unique_transaction_id', // generate unique transaction ID for each payment
+        success_url: 'http://localhost:5000/payment/success',
+        fail_url: 'http://localhost:5000/payment/fail',
+        cancel_url: 'http://localhost:5000/payment/cancel',
+        ipn_url: 'http://localhost:5000/payment/ipn',
+        product_name: 'Sample Product',
+        product_category: 'Sample Category',
+        product_profile: 'general',
+        cus_name: 'Customer Name',
+        cus_email: 'customer@example.com',
+        cus_add1: 'Customer Address',
+        cus_city: 'Dhaka',
+        cus_state: 'Dhaka',
+        cus_postcode: '1000',
+        cus_country: 'Bangladesh',
+        cus_phone: '01711111111',
+        shipping_method: 'NO',
+        num_of_item: 1,
+        product_name: 'Test',
+      };
+
+      const sslcommerz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+
+      sslcommerz.init(data).then(response => {
+        if (response.status === 'SUCCESS') {
+          res.json({ status: 'SUCCESS', redirectURL: response.GatewayPageURL });
+        } else {
+          res.json({ status: 'FAILED', message: response.failedreason });
+        }
+      }).catch(err => {
+        console.error(err);
+        res.status(500).json({ status: 'FAILED', message: 'Internal Server Error' });
+      });
+    });
+    
+     
+       
+    
+      
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
     // await client.close();
   }
 }
