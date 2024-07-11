@@ -1,28 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-
-const SSLCommerzPayment = require('sslcommerz-lts')
-
+const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const items = require('./items.json');
 
-// const stripe = require('stripe')("pk_test_51PYQnu2MI2zfqDyLp5ilg5jdGc1lnyegjoR9HoipdwlvHcO1aMg5XQeBWHLmJtKCPKTGrxjCCklmSu6HrDrpOhOc006OoEe1fm")
-
-//middleware
-//mongodb restaurant (rifat913766) ||rifat...
 app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
-})
+});
 
 app.get('/items', (req, res) => {
   res.send(items);
-})
+});
 
 app.get('/items/:id', (req, res) => {
   const itemId = parseInt(req.params.id);
@@ -37,13 +31,10 @@ app.get('/items/:id', (req, res) => {
 });
 
 const uri = "mongodb+srv://restaurant:rifat913766@cluster0.20dr11o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-//SSL
 const store_id = process.env.SSL_STORE_ID;
 const store_passwd = process.env.SSL_STORE_PASS;
 const is_live = false;
 
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -52,50 +43,69 @@ const client = new MongoClient(uri, {
   }
 });
 
-
-
 async function run() {
   try {
     await client.connect();
 
-    // const database = client.db("restaurantDB");
     const userCollection = client.db("restaurantDB").collection("user");
     const reviewCollection = client.db("restaurantDB").collection("review");
     const cartCollection = client.db("restaurantDB").collection("cart");
+    const reserveCollection = client.db("restaurantDB").collection("reserve");
 
-    //Registration User Data Store
     app.post('/user', async (req, res) => {
       const userData = req.body;
-      // console.log(user);
       const result = await userCollection.insertOne(userData);
       res.send(result);
     });
+
     app.get('/user', async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
-    app.put('user/:id', async (req, res) => {
+
+    app.put('/user/:id', async (req, res) => {
       const id = req.params.id;
       const updateUser = req.body;
       console.log(updateUser);
     });
 
-    //Review Data
+    app.delete('/user/:id', async (req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    })
+// Make Admin
+    app.patch('/user/admin/:id', async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const updateUser = {
+        $set:{
+          role: 'admin'
+        }
+      }
+      const result = await userCollection.updateOne(filter, updateUser);
+      res.send(result);
+    })
+
+
+    // Review
     app.get('/review', async (req, res) => {
       const result = await reviewCollection.find().toArray();
       res.send(result);
     });
 
-    //Cart Data
-    app.post('/cart', async(req, res)=>{
-      const cartData= req.body;
-      console.log(cartData );
+    // Cart
+    app.post('/cart', async (req, res) => {
+      const cartData = req.body;
+      // console.log(cartData);
       const result = await cartCollection.insertOne(cartData);
       res.send(result);
     });
-    app.get('/cart', async(req, res)=>{
+
+    app.get('/cart', async (req, res) => {
       const userEmail = req.query.email;
-      const result = await cartCollection.find({email:userEmail}).toArray();
+      const result = await cartCollection.find({ email: userEmail }).toArray();
       res.send(result);
     });
 
@@ -103,28 +113,27 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await cartCollection.deleteOne(query);
-        if (result.deletedCount === 1) {
-          res.status(200).json({ message: 'Item deleted successfully' });
-        } 
+      if (result.deletedCount === 1) {
+        res.status(200).json({ message: 'Item deleted successfully' });
+      }
     });
 
-    //Payment  
+    // Reserve
+    app.post('/reserve', async (req, res) => {
+      const reserveData = req.body;
+      console.log(reserveData);
+      const result = await reserveCollection.insertOne(reserveData);
+      res.send(result);
+    });
 
-    // STRIPE
-    // app.post('/payment', async(req, res)=>{
-    //   const {price} = req.body;
-    //   const amount = parseInt(price*100);
-    //   const paymentIntent = await stripe.paymentIntents.create({
-    //     amount: amount,
-    //     currency:'usd',
-    //     payment_methods_type:['card']
-    //   })
-    //   res.send({
-    //     clientSecrect : paymentIntent.client_secret,
-    //   })
-    // })
+    app.get('/reserve', async (req, res) => {
+      const result = await reserveCollection.find().toArray();
+      // const userEmail = req.query.email;
+      // const result = await cartCollection.find({ email: userEmail }).toArray();
+      res.send(result);
+    });
 
-
+    // Payment
     app.post('/payment', async (req, res) => {
       const { totalAmount, productId } = req.body;
       console.log(`Received payment request for total amount: ${totalAmount} and product ID: ${productId}`);
@@ -165,24 +174,52 @@ async function run() {
         }
       }).catch(err => {
         console.error(err);
-        res.status(500).json({ status: 'FAILED', message: 'Internal Server Error' });
+        res.status(500n).json({ status: 'FAILED', message: 'Internal Server Error' });
       });
     });
-    
-     
-       
-    
-      
 
-    // Send a ping to confirm a successful connection
+    // Success route
+    app.post('/payment/success', async (req, res) => {
+      // Extract user email from the request
+      const userEmail = req.body.value_c;
+
+      // Clear the user's cart
+      await cartCollection.deleteMany({ email: userEmail });
+
+      // Redirect to home page
+      res.redirect('/');
+    });
+
+    // Fail route
+    app.post('/payment/fail', (req, res) => {
+      // Handle the failure logic here
+      console.log('Payment failed:', req.body);
+      res.redirect('/');
+    });
+
+    // Cancel route
+    app.post('/payment/cancel', (req, res) => {
+      // Handle the cancel logic here
+      console.log('Payment cancelled:', req.body);
+      res.redirect('/');
+    });
+
+    // IPN route
+    app.post('/payment/ipn', (req, res) => {
+      // Handle the IPN logic here
+      console.log('IPN received:', req.body);
+      res.redirect('/');
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
+    // Ensures that the client will close when you finish/error
     // await client.close();
   }
 }
 run().catch(console.dir);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
