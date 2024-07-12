@@ -6,6 +6,7 @@ const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const items = require('./items.json');
+const jwt = require('jsonwebtoken');
 
 app.use(cors());
 app.use(express.json());
@@ -17,6 +18,15 @@ app.get('/', (req, res) => {
 app.get('/items', (req, res) => {
   res.send(items);
 });
+
+//
+// const app = express();
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+});
+
 
 app.get('/items/:id', (req, res) => {
   const itemId = parseInt(req.params.id);
@@ -52,13 +62,39 @@ async function run() {
     const cartCollection = client.db("restaurantDB").collection("cart");
     const reserveCollection = client.db("restaurantDB").collection("reserve");
 
+     //JWT (Json Web Token)
+     app.post('/jwt', async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN, {
+        expiresIn: '24h',
+      });
+      res.send({ token });
+    });
+
+    //middleware for jwt
+    const verifyToken = (req, res, next) => {
+      if (!req.headers.authorization) {
+        return res.status(401).send({ message: 'unauthorized access' });
+      }
+      const token = req.headers.authorization.split(' ')[1];
+      jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
+        if (err) {
+          return res.status(401).send({ message: 'not access' });
+        }
+        req.decoded = decoded;
+        next();
+      });
+    };
+    
+
+    //User 
     app.post('/user', async (req, res) => {
       const userData = req.body;
       const result = await userCollection.insertOne(userData);
       res.send(result);
     });
 
-    app.get('/user', async (req, res) => {
+    app.get('/user',  async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
@@ -75,19 +111,35 @@ async function run() {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     })
-// Make Admin
+
+    // Make Admin
     app.patch('/user/admin/:id', async(req,res)=>{
       const id = req.params.id;
       const filter = {_id: new ObjectId(id)};
       const updateUser = {
         $set:{
-          role: 'admin'
+          role:'admin'
         }
       }
       const result = await userCollection.updateOne(filter, updateUser);
       res.send(result);
     })
 
+    app.get('/user/admin/:email', verifyToken, async (req, res) => {
+      const email = req.params.email;
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: 'no access' });
+      }
+    
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      let admin = false;
+      if (user) {
+        admin = user?.role === 'admin';
+      }
+      res.send({ admin });
+    });
+    
 
     // Review
     app.get('/review', async (req, res) => {
