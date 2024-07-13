@@ -15,9 +15,9 @@ app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
 });
 
-app.get('/items', (req, res) => {
-  res.send(items);
-});
+// app.get('/items', (req, res) => {
+//   res.send(items);
+// });
 
 //
 // const app = express();
@@ -28,17 +28,17 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/items/:id', (req, res) => {
-  const itemId = parseInt(req.params.id);
-  const item = items.find(item => item.id === itemId);
+// app.get('/items/:id', (req, res) => {
+//   const itemId = parseInt(req.params.id);
+//   const item = items.find(item => item.id === itemId);
 
-  if (!item) {
-    return res.status(404).json({ error: 'Item not found' });
-  }
-  setTimeout(() => {
-    res.json(item);
-  }, 1000);
-});
+//   if (!item) {
+//     return res.status(404).json({ error: 'Item not found' });
+//   }
+//   setTimeout(() => {
+//     res.json(item);
+//   }, 1000);
+// });
 
 const uri = "mongodb+srv://restaurant:rifat913766@cluster0.20dr11o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const store_id = process.env.SSL_STORE_ID;
@@ -57,10 +57,43 @@ async function run() {
   try {
     await client.connect();
 
+    const itemCollection = client.db("restaurantDB").collection("items");
     const userCollection = client.db("restaurantDB").collection("user");
     const reviewCollection = client.db("restaurantDB").collection("review");
     const cartCollection = client.db("restaurantDB").collection("cart");
     const reserveCollection = client.db("restaurantDB").collection("reserve");
+
+    //Items
+    app.get('/items',  async (req, res) => {
+      const result = await itemCollection.find().toArray();
+      res.send(result);
+    });
+  
+    app.get('/items/:id', (req, res) => {
+      const itemId = parseInt(req.params.id);
+      const item = items.find(item => item.id === itemId);
+      if (!item) {
+        return res.status(404).json({ error: 'Item not found' });
+      }
+      setTimeout(() => {
+        res.json(item);
+      }, 1000);
+    });
+
+    app.post('/items', async (req, res) => {
+      const userData = req.body;
+      const result = await userCollection.insertOne(userData);
+      res.send(result);
+    });
+
+    app.delete('/items/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await itemCollection.deleteOne(query);
+      if (result.deletedCount === 1) {
+        res.status(200).json({ message: 'Item deleted successfully' });
+      }
+    });
 
      //JWT (Json Web Token)
      app.post('/jwt', async (req, res) => {
@@ -166,7 +199,7 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await cartCollection.deleteOne(query);
       if (result.deletedCount === 1) {
-        res.status(200).json({ message: 'Item deleted successfully' });
+        res.status(200).json({ message: 'Cart deleted successfully' });
       }
     });
 
