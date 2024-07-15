@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
-const items = require('./items.json');
+// const items = require('./items.json');
 const jwt = require('jsonwebtoken');
 
 app.use(cors());
@@ -27,18 +27,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-// app.get('/items/:id', (req, res) => {
-//   const itemId = parseInt(req.params.id);
-//   const item = items.find(item => item.id === itemId);
-
-//   if (!item) {
-//     return res.status(404).json({ error: 'Item not found' });
-//   }
-//   setTimeout(() => {
-//     res.json(item);
-//   }, 1000);
-// });
 
 const uri = "mongodb+srv://restaurant:rifat913766@cluster0.20dr11o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const store_id = process.env.SSL_STORE_ID;
@@ -62,6 +50,7 @@ async function run() {
     const reviewCollection = client.db("restaurantDB").collection("review");
     const cartCollection = client.db("restaurantDB").collection("cart");
     const reserveCollection = client.db("restaurantDB").collection("reserve");
+    const feedbackCollection = client.db("restaurantDB").collection("feedback");
 
     //Items
     app.get('/items',  async (req, res) => {
@@ -69,16 +58,46 @@ async function run() {
       res.send(result);
     });
   
+  
     app.get('/items/:id', (req, res) => {
       const itemId = parseInt(req.params.id);
-      const item = items.find(item => item.id === itemId);
-      if (!item) {
+      const items = items.find(item => item.id === itemId);
+      if (!items) {
         return res.status(404).json({ error: 'Item not found' });
       }
       setTimeout(() => {
-        res.json(item);
+        res.json(items);
       }, 1000);
     });
+
+     app.get('/items/:id/update',async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await itemCollection.findOne(query);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.put('/items/:id', async(req,res)=>{
+      const id= req.params.id;
+      const filter ={_id: new ObjectId(id)};
+      const options ={upsert: true};
+      const updateItem = req.body;
+      const update={
+        $set:{
+          name:updateItem.name,
+          price:updateItem.price,
+          short_details:updateItem.short_details,
+          long_details:updateItem.long_details,
+          rating:updateItem.rating,
+          origin:updateItem.origin
+        }
+      }
+      const result = await itemCollection.updateOne(filter, update,options );
+      res.send(result);
+      console.log(result);
+    })
+
 
     app.post('/items', async (req, res) => {
       const userData = req.body;
@@ -94,6 +113,13 @@ async function run() {
         res.status(200).json({ message: 'Item deleted successfully' });
       }
     });
+
+    // app.get('/items/:id',async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await itemCollection.findOne(query);
+    //   res.send(result);     
+    // });
 
      //JWT (Json Web Token)
      app.post('/jwt', async (req, res) => {
@@ -180,6 +206,19 @@ async function run() {
       res.send(result);
     });
 
+    //Feedback
+    app.post('/feedback', async(req, res)=>{
+      const feedbackData = req.body;
+      // console.log(feedbackData);
+      const result = await feedbackCollection.insertOne(feedbackData);
+      res.send(result);
+    })
+
+    app.get('/feedback', async(req, res)=>{
+      const result= await feedbackCollection.find().toArray();
+      res.send(result);
+    })
+
     // Cart
     app.post('/cart', async (req, res) => {
       const cartData = req.body;
@@ -213,8 +252,6 @@ async function run() {
 
     app.get('/reserve', async (req, res) => {
       const result = await reserveCollection.find().toArray();
-      // const userEmail = req.query.email;
-      // const result = await cartCollection.find({ email: userEmail }).toArray();
       res.send(result);
     });
 
