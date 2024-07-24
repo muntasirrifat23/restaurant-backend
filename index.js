@@ -7,9 +7,20 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 // const items = require('./items.json');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
 
 app.use(cors());
 app.use(express.json());
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage });
 
 app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
@@ -70,6 +81,8 @@ async function run() {
       }, 1000);
     });
 
+
+    //Update Item
      app.get('/items/:id/update',async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -83,6 +96,7 @@ async function run() {
       const filter ={_id: new ObjectId(id)};
       const options ={upsert: true};
       const updateItem = req.body;
+      // console.log(updateItem);
       const update={
         $set:{
           name:updateItem.name,
@@ -95,16 +109,9 @@ async function run() {
       }
       const result = await itemCollection.updateOne(filter, update,options );
       res.send(result);
-      console.log(result);
     })
 
-
-    app.post('/items', async (req, res) => {
-      const userData = req.body;
-      const result = await userCollection.insertOne(userData);
-      res.send(result);
-    });
-
+    //Delete Item
     app.delete('/items/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -114,12 +121,24 @@ async function run() {
       }
     });
 
-    // app.get('/items/:id',async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) };
-    //   const result = await itemCollection.findOne(query);
-    //   res.send(result);     
+    //Add Item
+    // app.post('/items', async (req, res) => {
+    //   const updateData = req.body;
+    //   console.log(updateData);
+    //   const result = await userCollection.insertOne(updateData);
+    //   res.send(result);
     // });
+
+    app.post('/items', upload.single('image'), async (req, res) => {
+      const { name, price, short_details, long_details, rating, origin } = req.body;
+      const image = req.file ? req.file.filename : null;
+      const addItemDetails = { name, price, short_details, long_details, rating, origin,  image };
+      console.log(addItemDetails);
+
+      const result = await itemCollection.insertOne(addItemDetails);
+      res.send(result);
+    });
+
 
      //JWT (Json Web Token)
      app.post('/jwt', async (req, res) => {
@@ -245,7 +264,7 @@ async function run() {
     // Reserve
     app.post('/reserve', async (req, res) => {
       const reserveData = req.body;
-      console.log(reserveData);
+      // console.log(reserveData);
       const result = await reserveCollection.insertOne(reserveData);
       res.send(result);
     });
@@ -265,7 +284,7 @@ async function run() {
         store_passwd: store_passwd,
         total_amount: totalAmount,
         currency: 'BDT',
-        tran_id: 'unique_transaction_id', // generate unique transaction ID for each payment
+        tran_id: 'unique_transaction_id', 
         success_url: 'http://localhost:5000/payment/success',
         fail_url: 'http://localhost:5000/payment/fail',
         cancel_url: 'http://localhost:5000/payment/cancel',
