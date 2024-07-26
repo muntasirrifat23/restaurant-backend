@@ -122,22 +122,22 @@ async function run() {
     });
 
     //Add Item
-    // app.post('/items', async (req, res) => {
-    //   const updateData = req.body;
-    //   console.log(updateData);
-    //   const result = await userCollection.insertOne(updateData);
-    //   res.send(result);
-    // });
-
-    app.post('/items', upload.single('image'), async (req, res) => {
-      const { name, price, short_details, long_details, rating, origin } = req.body;
-      const image = req.file ? req.file.filename : null;
-      const addItemDetails = { name, price, short_details, long_details, rating, origin,  image };
-      console.log(addItemDetails);
-
-      const result = await itemCollection.insertOne(addItemDetails);
+    app.post('/items', async (req, res) => {
+      const updateData = req.body;
+      console.log(updateData);
+      const result = await userCollection.insertOne(updateData);
       res.send(result);
     });
+
+    // app.post('/items', upload.single('image'), async (req, res) => {
+    //   const { name, price, short_details, long_details, rating, origin } = req.body;
+    //   const image = req.file ? req.file.filename : null;
+    //   const addItemDetails = { name, price, short_details, long_details, rating, origin,  image };
+    //   console.log(addItemDetails);
+
+    //   const result = await itemCollection.insertOne(addItemDetails);
+    //   res.send(result);
+    // });
 
 
      //JWT (Json Web Token)
@@ -273,6 +273,22 @@ async function run() {
       const result = await reserveCollection.find().toArray();
       res.send(result);
     });
+
+    //Admin Home
+    app.get('/admin-home', async(req,res)=>{
+      const users = await userCollection.estimatedDocumentCount();
+      const items = await itemCollection.estimatedDocumentCount();
+      const reserve = await reserveCollection.estimatedDocumentCount();
+      const feedback = await feedbackCollection.estimatedDocumentCount();
+      // RESERVE, FEEDBACK
+
+      res.send({
+        users,
+        items,
+        reserve, 
+        feedback
+      })
+    })
 
     // Payment
     app.post('/payment', async (req, res) => {
