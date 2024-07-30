@@ -68,21 +68,18 @@ async function run() {
       const result = await itemCollection.find().toArray();
       res.send(result);
     });
-  
-  
-    app.get('/items/:id', (req, res) => {
+
+    //Items Details
+    app.get('/items/:id', async (req, res) => {
       const itemId = parseInt(req.params.id);
-      const items = items.find(item => item.id === itemId);
-      if (!items) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
-      setTimeout(() => {
-        res.json(items);
-      }, 1000);
+        const item = await itemCollection.findOne({ id: itemId });
+        if (!item) {
+          return res.status(404).json({ error: 'Item not found' });
+        }
+        res.json(item);
     });
 
-
-    //Update Item
+    //Items Update 
      app.get('/items/:id/update',async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -111,7 +108,7 @@ async function run() {
       res.send(result);
     })
 
-    //Delete Item
+    //Items Delete 
     app.delete('/items/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -121,11 +118,11 @@ async function run() {
       }
     });
 
-    //Add Item
+    //Add Items
     app.post('/items', async (req, res) => {
-      const updateData = req.body;
-      console.log(updateData);
-      const result = await userCollection.insertOne(updateData);
+      const AddUpdateData = req.body;
+      console.log(AddUpdateData);
+      const result = await userCollection.insertOne(AddUpdateData);
       res.send(result);
     });
 
