@@ -341,8 +341,38 @@ async function run() {
       await cartCollection.deleteMany({ email: userEmail });
 
       // Redirect to home page
-      res.redirect('/');
+      res.redirect('http://localhost:5173/');
     });
+    // app.post('/payment/success', async (req, res) => {
+    //   try {
+    //     // Process the payment data
+    //     const paymentData = req.body;
+    //     const userEmail = req.query.email;
+    
+    //     // Save payment details to MongoDB
+    //     const paymentDetails = {
+    //       transaction_id: paymentData.tran_id,
+    //       status: paymentData.status,
+    //       amount: paymentData.total_amount,
+    //       currency: paymentData.currency,
+    //       payment_method: paymentData.card_type || 'N/A',
+    //       user_email: userEmail,
+    //       payment_date: new Date(),
+    //     };
+    
+    //     const result = await paymentCollection.insertOne(paymentDetails);
+    //     console.log('Payment details saved:', result);
+    
+    //     // Clear the user's cart
+    //     await cartCollection.deleteMany({ email: userEmail });
+    
+    //     // Redirect to home page
+    //     res.redirect('/');
+    //   } catch (error) {
+    //     console.error('Error processing payment success:', error);
+    //     res.status(500).send('Internal Server Error');
+    //   }
+    // });
 
     // Fail route
     app.post('/payment/fail', (req, res) => {
