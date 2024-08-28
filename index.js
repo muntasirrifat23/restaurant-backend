@@ -283,13 +283,15 @@ async function run() {
       const items = await itemCollection.estimatedDocumentCount();
       const reserve = await reserveCollection.estimatedDocumentCount();
       const feedback = await feedbackCollection.estimatedDocumentCount();
+      const payment = await paymentCollection.estimatedDocumentCount();
       // RESERVE, FEEDBACK
 
       res.send({
         users,
         items,
         reserve, 
-        feedback
+        feedback, 
+        payment
       })
     })
 
@@ -463,6 +465,30 @@ async function run() {
         res.status(500).send('Internal Server Error');
       }
     });
+
+    //Payment Data 
+
+    app.get('/paymentData',  async (req, res) => {
+      const result = await paymentCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.delete('/paymentData/:id', async (req, res) => {
+      const { id } = req.params;
+      const result = await paymentCollection.deleteOne({ _id: new ObjectId(id) });
+    
+      if (result.deletedCount === 1) {
+        res.status(200).send({ message: 'Payment deleted successfully' });
+      } else {
+        res.status(404).send({ message: 'Payment not found' });
+      }
+    });
+
+    app.delete('/paymentData', async(req,res)=>{
+      const result = await paymentCollection.deleteMany({});
+      res.status(200).send({ message: `${result.deletedCount} payments deleted successfully` });
+    })
+    
     
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
