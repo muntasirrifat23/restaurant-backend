@@ -356,10 +356,9 @@ async function run() {
         };
     
         console.log('Payment details to be saved:', paymentDetails);
-    
+
         const result = await paymentCollection.insertOne(paymentDetails);
-        console.log('Payment details saved:', result);
-    
+        console.log('Payment details saved:', result);    
         if (paymentDetails.user_email) {
           await cartCollection.deleteMany({ email: paymentDetails.user_email });
           console.log('User cart cleared:', paymentDetails.user_email);
@@ -377,26 +376,94 @@ async function run() {
     
 
     // Fail route
-    app.post('/payment/fail', (req, res) => {
-      // Handle the failure logic here
-      console.log('Payment failed:', req.body);
-      res.redirect('/');
+    app.post('/payment/fail', async (req, res) => {
+      try {
+        console.log('Payment failed:', req.body);
+        const paymentData = req.body;
+        const paymentDetails = {
+          transaction_id: paymentData.tran_id || null,
+          status: paymentData.status || 'FAILED',
+          amount: paymentData.amount || null,
+          currency: paymentData.currency || null,
+          payment_method: paymentData.card_type || 'N/A',
+          user_email: paymentData.cus_email || null,
+          payment_date: new Date(),
+        };
+        await paymentCollection.insertOne(paymentDetails);
+    
+        res.status(200).send('Payment Failed');
+  } catch (error) {
+    console.error('Error handling payment failure:', error);
+    res.status(500).send('Internal Server Error');
+  }
     });
+    
 
     // Cancel route
-    app.post('/payment/cancel', (req, res) => {
-      // Handle the cancel logic here
-      console.log('Payment cancelled:', req.body);
-      res.redirect('/');
+    app.post('/payment/cancel', async (req, res) => {
+      try {
+        console.log('Payment cancelled:', req.body);
+    
+        // Optional: Update payment status in the database
+        const paymentData = req.body;
+        const paymentDetails = {
+          transaction_id: paymentData.tran_id || null,
+          status: paymentData.status || 'CANCELLED',
+          amount: paymentData.amount || null,
+          currency: paymentData.currency || null,
+          payment_method: paymentData.card_type || 'N/A',
+          user_email: paymentData.cus_email || null,
+          payment_date: new Date(),
+        };
+    
+        // Log the cancellation or update database
+        await paymentCollection.insertOne(paymentDetails);
+        
+        // Optional: Notify the user or take further action
+        // ...
+    
+        // Redirect to a cancellation page
+        res.redirect('/payment-cancel'); // Replace with your cancellation page URL
+      } catch (error) {
+        console.error('Error handling payment cancellation:', error);
+        res.status(500).send('Internal Server Error');
+      }
     });
-
+    
     // IPN route
-    app.post('/payment/ipn', (req, res) => {
-      // Handle the IPN logic here
-      console.log('IPN received:', req.body);
-      res.redirect('/');
+    app.post('/payment/ipn', async (req, res) => {
+      try {
+        console.log('IPN received:', req.body);
+    
+        // Verify IPN message (implementation depends on your payment gateway)
+        // ...
+    
+        // Process the IPN message
+        const paymentData = req.body;
+        const paymentDetails = {
+          transaction_id: paymentData.tran_id || null,
+          status: paymentData.status || 'IPN_RECEIVED',
+          amount: paymentData.amount || null,
+          currency: paymentData.currency || null,
+          payment_method: paymentData.card_type || 'N/A',
+          user_email: paymentData.cus_email || null,
+          payment_date: new Date(),
+        };
+    
+        // Log the IPN or update database
+        await paymentCollection.insertOne(paymentDetails);
+        
+        // Optional: Take further action based on IPN data
+        // ...
+    
+        // Respond to the IPN message
+        res.status(200).send('IPN Received'); // or appropriate response based on gateway requirements
+      } catch (error) {
+        console.error('Error handling IPN:', error);
+        res.status(500).send('Internal Server Error');
+      }
     });
-
+    
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
