@@ -9,6 +9,11 @@ const port = process.env.PORT || 5000;
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 
+//
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+//
+
 app.use(cors());
 app.use(express.json());
 
@@ -62,6 +67,7 @@ async function run() {
     const cartCollection = client.db("restaurantDB").collection("cart");
     const reserveCollection = client.db("restaurantDB").collection("reserve");
     const feedbackCollection = client.db("restaurantDB").collection("feedback");
+    const paymentCollection = client.db("restaurantDB").collection("payment");
 
     //Items
     app.get('/items',  async (req, res) => {
@@ -334,45 +340,41 @@ async function run() {
 
     // Success route
     app.post('/payment/success', async (req, res) => {
-      // Extract user email from the request
-      const userEmail = req.body.value_c;
-
-      // Clear the user's cart
-      await cartCollection.deleteMany({ email: userEmail });
-
-      // Redirect to home page
-      res.redirect('http://localhost:5173/');
+      try {
+        console.log('Received payment data:', req.body);
+        console.log('Request Headers:', req.headers);
+    
+        const paymentData = req.body;
+        const paymentDetails = {
+          transaction_id: paymentData.tran_id || null,
+          status: paymentData.status || null,
+          amount: paymentData.amount || null,
+          currency: paymentData.currency || null,
+          payment_method: paymentData.card_type || 'N/A',
+          user_email: paymentData.value_a || null,
+          payment_date: new Date(),
+        };
+    
+        console.log('Payment details to be saved:', paymentDetails);
+    
+        const result = await paymentCollection.insertOne(paymentDetails);
+        console.log('Payment details saved:', result);
+    
+        if (paymentDetails.user_email) {
+          await cartCollection.deleteMany({ email: paymentDetails.user_email });
+          console.log('User cart cleared:', paymentDetails.user_email);
+        } else {
+          console.warn('User email is null, skipping cart clearance.');
+        }
+    
+        // Redirect to success page
+        res.redirect('http://localhost:5173/');
+      } catch (error) {
+        console.error('Error processing payment success:', error);
+        res.status(500).send('Internal Server Error');
+      }
     });
-    // app.post('/payment/success', async (req, res) => {
-    //   try {
-    //     // Process the payment data
-    //     const paymentData = req.body;
-    //     const userEmail = req.query.email;
     
-    //     // Save payment details to MongoDB
-    //     const paymentDetails = {
-    //       transaction_id: paymentData.tran_id,
-    //       status: paymentData.status,
-    //       amount: paymentData.total_amount,
-    //       currency: paymentData.currency,
-    //       payment_method: paymentData.card_type || 'N/A',
-    //       user_email: userEmail,
-    //       payment_date: new Date(),
-    //     };
-    
-    //     const result = await paymentCollection.insertOne(paymentDetails);
-    //     console.log('Payment details saved:', result);
-    
-    //     // Clear the user's cart
-    //     await cartCollection.deleteMany({ email: userEmail });
-    
-    //     // Redirect to home page
-    //     res.redirect('/');
-    //   } catch (error) {
-    //     console.error('Error processing payment success:', error);
-    //     res.status(500).send('Internal Server Error');
-    //   }
-    // });
 
     // Fail route
     app.post('/payment/fail', (req, res) => {
