@@ -297,15 +297,15 @@ async function run() {
 
     // Payment
     app.post('/payment', async (req, res) => {
-      const { totalAmount, productId } = req.body;
-      console.log(`Received payment request for total amount: ${totalAmount} and product ID: ${productId}`);
+      const { totalAmount, productId, userInfo } = req.body;
+      console.log(`Total amount: ${totalAmount}, Product ID: ${productId} and User Info:${userInfo}` );
 
       const data = {
         store_id: store_id,
         store_passwd: store_passwd,
         total_amount: totalAmount,
         currency: 'BDT',
-        tran_id: 'unique_transaction_id', 
+        tran_id: 'unique_transaction_id',
         success_url: 'http://localhost:5000/payment/success',
         fail_url: 'http://localhost:5000/payment/fail',
         cancel_url: 'http://localhost:5000/payment/cancel',
@@ -314,8 +314,7 @@ async function run() {
         product_category: 'Sample Category',
         product_profile: 'general',
         cus_name: 'Customer Name',
-        cus_email: 'customer@example.com',
-        cus_add1: 'Customer Address',
+        cus_email: userInfo,
         cus_city: 'Dhaka',
         cus_state: 'Dhaka',
         cus_postcode: '1000',
@@ -323,8 +322,10 @@ async function run() {
         cus_phone: '01711111111',
         shipping_method: 'NO',
         num_of_item: 1,
-        product_name: 'Test',
+        value_a: userInfo, // Pass the email here
       };
+      
+      console.log(data);
 
       const sslcommerz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
@@ -340,41 +341,43 @@ async function run() {
       });
     });
 
-    // Success route
-    app.post('/payment/success', async (req, res) => {
-      try {
-        console.log('Received payment data:', req.body);
-        console.log('Request Headers:', req.headers);
+   // Success route
+app.post('/payment/success', async (req, res) => {
+  try {
+    console.log('Received payment data:', req.body);
     
-        const paymentData = req.body;
-        const paymentDetails = {
-          transaction_id: paymentData.tran_id || null,
-          status: paymentData.status || null,
-          amount: paymentData.amount || null,
-          currency: paymentData.currency || null,
-          payment_method: paymentData.card_type || 'N/A',
-          user_email: paymentData.value_a || null,
-          payment_date: new Date(),
-        };
-    
-        console.log('Payment details to be saved:', paymentDetails);
+    const paymentData = req.body;
 
-        const result = await paymentCollection.insertOne(paymentDetails);
-        console.log('Payment details saved:', result);    
-        if (paymentDetails.user_email) {
-          await cartCollection.deleteMany({ email: paymentDetails.user_email });
-          console.log('User cart cleared:', paymentDetails.user_email);
-        } else {
-          console.warn('User email is null, skipping cart clearance.');
-        }
+    const paymentDetails = {
+      transaction_id: paymentData.tran_id || null,
+      status: paymentData.status || null,
+      amount: paymentData.amount || null,
+      currency: paymentData.currency || null,
+      payment_method: paymentData.card_type || 'N/A',
+      user_email: paymentData.value_a || null,  // Use value_a to get the email
+      payment_date: new Date(),
+    };
+
+    console.log('Payment details to be saved:', paymentDetails);
+    const result = await paymentCollection.insertOne(paymentDetails);
+    console.log('Payment details saved:', result);    
     
-        // Redirect to success page
-        res.redirect('http://localhost:5173/');
-      } catch (error) {
-        console.error('Error processing payment success:', error);
-        res.status(500).send('Internal Server Error');
-      }
-    });
+    if (paymentDetails.user_email) {
+      await cartCollection.deleteMany({ email: paymentDetails.user_email });
+      console.log('User cart cleared:', paymentDetails.user_email);
+    } else {
+      console.warn('User email is null, skipping cart clearance.');
+    }
+
+    // Redirect to success page
+    res.redirect('http://localhost:5173/');
+  } catch (error) {
+    console.error('Error processing payment success:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
     
 
     // Fail route
@@ -388,10 +391,13 @@ async function run() {
           amount: paymentData.amount || null,
           currency: paymentData.currency || null,
           payment_method: paymentData.card_type || 'N/A',
-          user_email: paymentData.cus_email || null,
+          user_email: paymentData.value_a || null,  // Use value_a to get the email
           payment_date: new Date(),
         };
-        await paymentCollection.insertOne(paymentDetails);
+
+        const result = await paymentCollection.insertOne(paymentDetails);
+        console.log('Failed payment:', result);    
+
     
         res.status(200).send('Payment Failed');
   } catch (error) {
