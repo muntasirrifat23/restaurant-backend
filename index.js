@@ -284,6 +284,7 @@ async function run() {
       const reserve = await reserveCollection.estimatedDocumentCount();
       const feedback = await feedbackCollection.estimatedDocumentCount();
       const payment = await paymentCollection.estimatedDocumentCount();
+      const review = await reviewCollection.estimatedDocumentCount();
       // RESERVE, FEEDBACK
 
       res.send({
@@ -291,7 +292,8 @@ async function run() {
         items,
         reserve, 
         feedback, 
-        payment
+        payment,
+        review
       })
     })
 
