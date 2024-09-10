@@ -241,6 +241,28 @@ async function run() {
       res.send(result);
     })
 
+     // Feedback Delete Single 
+     app.delete('/feedback/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await feedbackCollection.deleteOne(query);
+      if (result.deletedCount === 1) {
+        res.status(200).json({ message: 'Item deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'Item not found' });
+      }
+    });
+
+    //Feedback Delete All
+    app.delete('/feedback', async (req, res) => {
+      const result = await feedbackCollection.deleteMany({});
+      if (result.deletedCount > 0) {
+        res.status(200).json({ message: `${result.deletedCount} items deleted successfully` });
+      } else {
+        res.status(404).json({ message: 'No items found to delete' });
+      }
+    });
+
     // Cart
     app.post('/cart', async (req, res) => {
       const cartData = req.body;
@@ -275,6 +297,28 @@ async function run() {
     app.get('/reserve', async (req, res) => {
       const result = await reserveCollection.find().toArray();
       res.send(result);
+    });
+
+    // Reserve Delete Single 
+    app.delete('/reserve/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await reserveCollection.deleteOne(query);
+      if (result.deletedCount === 1) {
+        res.status(200).json({ message: 'Item deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'Item not found' });
+      }
+    });
+
+    //Reserve Delete All
+    app.delete('/reserve', async (req, res) => {
+      const result = await reserveCollection.deleteMany({});
+      if (result.deletedCount > 0) {
+        res.status(200).json({ message: `${result.deletedCount} items deleted successfully` });
+      } else {
+        res.status(404).json({ message: 'No items found to delete' });
+      }
     });
 
     //Admin Home
