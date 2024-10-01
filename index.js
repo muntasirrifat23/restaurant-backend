@@ -12,7 +12,7 @@ const multer = require('multer');
 //
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
-//
+//middle ware
 
 app.use(cors());
 app.use(express.json());
