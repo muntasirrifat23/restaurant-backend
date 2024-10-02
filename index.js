@@ -7,25 +7,18 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 // const items = require('./items.json');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
 
-//
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
-//middle ware
 
+//middle ware
 app.use(cors());
 app.use(express.json());
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
-const upload = multer({ storage });
 
 app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
@@ -35,8 +28,6 @@ app.get('/', (req, res) => {
 //   res.send(items);
 // });
 
-//
-// const app = express();
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
@@ -125,23 +116,32 @@ async function run() {
     });
 
     //Add Items
-    app.post('/items', async (req, res) => {
-      const AddUpdateData = req.body;
-      console.log(AddUpdateData);
-      const result = await userCollection.insertOne(AddUpdateData);
-      res.send(result);
-    });
-
-    // app.post('/items', upload.single('image'), async (req, res) => {
-    //   const { name, price, short_details, long_details, rating, origin } = req.body;
-    //   const image = req.file ? req.file.filename : null;
-    //   const addItemDetails = { name, price, short_details, long_details, rating, origin,  image };
-    //   console.log(addItemDetails);
-
-    //   const result = await itemCollection.insertOne(addItemDetails);
+    // app.post('/items', async (req, res) => {
+    //   const AddUpdateData = req.body;
+    //   console.log(AddUpdateData);
+    //   const result = await itemCollection.insertOne(AddUpdateData);
     //   res.send(result);
     // });
 
+    app.post('/items', upload.single('image'), async (req, res) => {
+      const AddUpdateData = {
+        name: req.body.name,
+        price: parseFloat(req.body.price),
+        short_details: req.body.short_details,
+        long_details: req.body.long_details,
+        rating: parseFloat(req.body.rating),
+        origin: req.body.origin,
+        image: req.file ? req.file.buffer.toString('base64') : null, // Store image as base64
+      };
+    
+      try {
+        const result = await itemCollection.insertOne(AddUpdateData);
+        res.send(result);
+      } catch (error) {
+        console.error("Error inserting item:", error);
+        res.status(500).send("Internal Server Error");
+      }
+    });
 
      //JWT (Json Web Token)
      app.post('/jwt', async (req, res) => {
