@@ -388,7 +388,7 @@ async function run() {
     });
 
    // Success route
-app.post('/payment/success', async (req, res) => {
+  app.post('/payment/success', async (req, res) => {
   try {
     console.log('Received payment data:', req.body);
     
@@ -519,7 +519,6 @@ app.post('/payment/success', async (req, res) => {
     });
 
     //Payment Data 
-
     app.get('/paymentData',  async (req, res) => {
       const result = await paymentCollection.find().toArray();
       res.send(result);
@@ -540,6 +539,25 @@ app.post('/payment/success', async (req, res) => {
       const result = await paymentCollection.deleteMany({});
       res.status(200).send({ message: `${result.deletedCount} payments deleted successfully` });
     })
+
+
+    // Order Details
+    app.get('/paymentData', async (req, res) => {
+        const userEmail = req.params.email;
+        const result = await paymentCollection.find({ user_email:userEmail, status: 'VALID' }).toArray();
+        res.send(result);
+    });
+    
+    // Order Delate
+    // app.delete('/order/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await paymentCollection.deleteOne(query);
+    //   if (result.deletedCount === 1) {
+    //     res.status(200).json({ message: 'Payment deleted successfully' });
+    //   }
+    // });
+
     
     
     await client.db("admin").command({ ping: 1 });
