@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
-// const items = require('./items.json');
+const items = require('./items.json');
 const jwt = require('jsonwebtoken');
 
 const multer = require('multer');
@@ -16,7 +16,18 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //middle ware
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://food-court-33137.firebaseapp.com",
+      "https://food-court-33137.web.app",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 
@@ -24,9 +35,9 @@ app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
 });
 
-// app.get('/items', (req, res) => {
-//   res.send(items);
-// });
+app.get('/items', (req, res) => {
+  res.send(items);
+});
 
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
