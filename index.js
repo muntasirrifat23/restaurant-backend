@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
-const items = require('./items.json');
+// const items = require('./items.json');
 const jwt = require('jsonwebtoken');
 
 const multer = require('multer');
@@ -23,6 +23,7 @@ app.use(
       "http://localhost:5173",
       "https://food-court-33137.firebaseapp.com",
       "https://food-court-33137.web.app",
+      "https://food-court-2024.netlify.app/"
     ],
     credentials: true,
   })
@@ -35,9 +36,9 @@ app.get('/', (req, res) => {
   res.send('Muntasir Rifat');
 });
 
-app.get('/items', (req, res) => {
-  res.send(items);
-});
+// app.get('/items', (req, res) => {
+//   res.send(items);
+// });
 
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
