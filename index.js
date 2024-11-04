@@ -364,10 +364,10 @@ async function run() {
         total_amount: totalAmount,
         currency: 'BDT',
         tran_id: 'unique_transaction_id',
-        success_url: 'http://localhost:5000/payment/success',
-        fail_url: 'http://localhost:5000/payment/fail',
-        cancel_url: 'http://localhost:5000/payment/cancel',
-        ipn_url: 'http://localhost:5000/payment/ipn',
+        success_url: 'https://restaurant-backend-pearl.vercel.app/payment/success',
+        fail_url: 'https://restaurant-backend-pearl.vercel.app/payment/fail',
+        cancel_url: 'https://restaurant-backend-pearl.vercel.app/payment/cancel',
+        ipn_url: 'https://restaurant-backend-pearl.vercel.app/payment/ipn',
         product_name: 'Sample Product',
         product_category: 'Sample Category',
         product_profile: 'general',
@@ -428,7 +428,7 @@ async function run() {
     }
 
     // Redirect to success page
-    res.redirect('http://localhost:5173/');
+    res.redirect('https://food-court-33137.web.app');
   } catch (error) {
     console.error('Error processing payment success:', error);
     res.status(500).send('Internal Server Error');
